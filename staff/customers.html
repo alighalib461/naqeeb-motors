@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Customer CRM | NaqeeB Motors Staff</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="/assets/images/logo.png" />
+
+  <!-- Google Fonts: Anton & Manrope -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="/css/staff.css" />
+
+  <!-- Supabase JS Client v2 (CDN) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body class="staff-body" data-staff-page="customers">
+
+  <div id="staff-app-section">
+    <!-- Top Navbar -->
+    <header class="staff-navbar">
+      <div class="staff-nav-container">
+        <div class="staff-brand">
+          <a href="/staff/index.html" style="display: flex; align-items: center; gap: 10px;">
+            <img src="/assets/images/logo.png" alt="NaqeeB Motors Emblem" />
+            <strong style="font-family: var(--font-heading); font-size: 1.1rem; letter-spacing: 0.05em;">NAQEEB MOTORS</strong>
+          </a>
+          <span class="staff-portal-badge">Staff Console</span>
+        </div>
+
+        <ul class="staff-nav-links">
+          <li><a href="/staff/index.html" class="staff-nav-btn">Dashboard</a></li>
+          <li><a href="/staff/vehicles.html" class="staff-nav-btn">Vehicles</a></li>
+          <li><a href="/staff/customers.html" class="staff-nav-btn active">Customers</a></li>
+          <li><a href="/staff/sales.html" class="staff-nav-btn">Sales Ledger</a></li>
+          <li><a href="/" target="_blank" class="staff-nav-btn" style="color: var(--brand-gold);">View Live Website ↗</a></li>
+        </ul>
+
+        <div class="staff-user-menu">
+          <div class="staff-user-info">
+            <span class="user-email" id="staff-user-email">staff@naqeebmotors.com</span>
+            <span style="font-size: 0.75rem; color: var(--brand-gold);">Active Session</span>
+          </div>
+          <button id="staff-logout-btn" class="btn-logout">Sign Out</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="staff-main-content">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 28px; flex-wrap: wrap; gap: 16px;">
+        <div>
+          <h1 style="font-size: 2rem; margin-bottom: 4px;">Customer Database</h1>
+          <p>Confidential client CRM with CNIC, contact records, and buying histories.</p>
+        </div>
+        <button id="open-add-customer-btn" class="btn btn-primary">
+          + Add New Customer
+        </button>
+      </div>
+
+      <!-- Customer Table Card -->
+      <div class="table-card">
+        <div class="table-header">
+          <div class="table-title">Registered Dealership Clients</div>
+        </div>
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Customer Name</th>
+                <th>CNIC Number</th>
+                <th>Phone Number</th>
+                <th>Email</th>
+                <th>Address</th>
+                <th>Notes</th>
+              </tr>
+            </thead>
+            <tbody id="customers-mgmt-tbody">
+              <!-- Rendered dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- ADD CUSTOMER MODAL -->
+  <div class="modal-overlay" id="customer-modal">
+    <div class="modal-box" style="max-width: 600px;">
+      <div class="modal-header">
+        <h3>Add New Customer Record</h3>
+        <button class="modal-close-btn" id="close-customer-modal-btn">✕</button>
+      </div>
+      <div class="modal-body">
+        <form id="customer-form">
+          <div class="form-group">
+            <label class="form-label">Full Name *</label>
+            <input type="text" id="c-name" class="form-input" required placeholder="e.g. Muhammad Ali" />
+          </div>
+
+          <div class="modal-grid-2">
+            <div class="form-group">
+              <label class="form-label">CNIC Number</label>
+              <input type="text" id="c-cnic" class="form-input" placeholder="e.g. 37405-XXXXXXX-X" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Phone Number *</label>
+              <input type="text" id="c-phone" class="form-input" required placeholder="e.g. 0300-1234567" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Email Address</label>
+            <input type="email" id="c-email" class="form-input" placeholder="client@example.com" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Residential / Business Address</label>
+            <input type="text" id="c-address" class="form-input" placeholder="e.g. Sector F-7, Islamabad" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Client Notes & Preferences</label>
+            <textarea id="c-notes" class="form-textarea" rows="2" placeholder="e.g. Interested in Japanese Hybrid SUVs..."></textarea>
+          </div>
+
+          <div style="display: flex; justify-content: flex-end; gap: 14px; margin-top: 24px;">
+            <button type="submit" class="btn btn-primary">Save Customer Record</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="/js/supabase-client.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/staff-dashboard.js"></script>
+</body>
+</html>
