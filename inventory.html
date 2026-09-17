@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Available Vehicle Inventory | NaqeeB Motors Islamabad</title>
+  <meta name="description" content="Explore our complete inventory of Pakistani and Japanese verified vehicles in Soan Gardens, Islamabad. Buy and sell with transparent dealing." />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="/assets/images/logo.png" />
+
+  <!-- Google Fonts: Anton & Manrope -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="/css/animations.css" />
+  <link rel="stylesheet" href="/css/showroom.css" />
+
+  <style>
+    .inventory-hero-banner {
+      padding: 140px 0 60px;
+      background: radial-gradient(circle at 50% 0%, rgba(229, 9, 20, 0.12) 0%, #090A0F 80%);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .filter-bar-container {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      margin-bottom: 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .filter-row-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .origin-toggle-group {
+      display: flex;
+      background: var(--bg-deep);
+      padding: 4px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-subtle);
+    }
+    .origin-filter-btn {
+      padding: 8px 18px;
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      font-family: var(--font-subheading);
+      font-weight: 600;
+      font-size: 0.85rem;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+    .origin-filter-btn.active {
+      background: var(--brand-red);
+      color: #FFFFFF;
+      box-shadow: 0 2px 10px var(--brand-red-glow);
+    }
+    .search-input-box {
+      flex: 1;
+      min-width: 260px;
+      position: relative;
+    }
+    .search-input-box input {
+      width: 100%;
+      background: var(--bg-deep);
+      border: 1px solid var(--border-subtle);
+      padding: 10px 16px 10px 42px;
+      border-radius: var(--radius-sm);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+    }
+    .search-input-box input:focus {
+      outline: none;
+      border-color: var(--brand-red);
+    }
+    .search-input-box svg {
+      position: absolute;
+      top: 50%;
+      left: 14px;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+    }
+    .filter-row-bottom {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .filter-select {
+      background: var(--bg-deep);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-primary);
+      padding: 8px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 0.88rem;
+      font-family: var(--font-subheading);
+    }
+    .filter-select:focus {
+      outline: none;
+      border-color: var(--brand-red);
+    }
+    .inventory-grid-wrapper {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 28px;
+      margin-bottom: 80px;
+    }
+  </style>
+
+  <!-- Supabase JS Client v2 (CDN) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+  <!-- Scroll Progress -->
+  <div id="scroll-progress"></div>
+
+  <!-- Navbar -->
+  <nav class="navbar scrolled">
+    <div class="navbar-container">
+      <a href="/" class="brand-logo">
+        <img src="/assets/images/logo.png" alt="NaqeeB Motors Emblem" />
+        <div class="brand-name">
+          <span class="title">NAQEEB <span>MOTORS</span></span>
+          <span class="sub">Islamabad • Pakistan</span>
+        </div>
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="/" class="nav-link">Home</a></li>
+        <li><a href="/#about" class="nav-link">About</a></li>
+        <li><a href="/inventory.html" class="nav-link active">Cars</a></li>
+        <li><a href="/#why-naqeeb" class="nav-link">Why NaqeeB</a></li>
+        <li><a href="/#reviews" class="nav-link">Reviews</a></li>
+        <li><a href="/#contact" class="nav-link">Contact</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <a href="/staff/index.html" class="nav-staff-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <span>Staff Portal</span>
+        </a>
+        <button class="hamburger-btn" aria-label="Toggle Menu">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Mobile Drawer Menu -->
+  <div class="mobile-drawer-overlay"></div>
+  <aside class="mobile-nav-drawer">
+    <div class="mobile-drawer-header">
+      <div class="brand-logo">
+        <img src="/assets/images/logo.png" alt="NaqeeB Motors Emblem" style="height: 38px;" />
+        <span class="brand-name"><span class="title">NAQEEB <span>MOTORS</span></span></span>
+      </div>
+      <button class="mobile-drawer-close" aria-label="Close Menu">✕</button>
+    </div>
+    <ul class="mobile-nav-links">
+      <li><a href="/" class="mobile-nav-link">Home</a></li>
+      <li><a href="/#about" class="mobile-nav-link">About NaqeeB</a></li>
+      <li><a href="/inventory.html" class="mobile-nav-link">Available Cars</a></li>
+      <li><a href="/#why-naqeeb" class="mobile-nav-link">Why NaqeeB</a></li>
+      <li><a href="/#reviews" class="mobile-nav-link">Customer Reviews</a></li>
+      <li><a href="/#contact" class="mobile-nav-link">Contact Showroom</a></li>
+    </ul>
+    <div class="mobile-drawer-footer">
+      <a href="/staff/index.html" class="btn btn-primary btn-sm" style="width: 100%;">
+        Staff Portal Login
+      </a>
+    </div>
+  </aside>
+
+  <!-- Inventory Header Banner -->
+  <section class="inventory-hero-banner">
+    <div class="container">
+      <span class="section-tag"><span class="dot"></span> Verified Showroom Fleet</span>
+      <h1 style="margin-bottom: 12px; font-size: clamp(2.5rem, 5.5vw, 4rem);">AVAILABLE <span style="color: var(--brand-red);">CAR INVENTORY</span></h1>
+      <p style="font-size: 1.1rem; max-width: 650px; font-family: var(--font-body); color: var(--text-secondary);">
+        Browse our verified inventory of Pakistani local assemblies and Japanese imported models. Every vehicle is thoroughly inspected.
+      </p>
+    </div>
+  </section>
+
+  <!-- Inventory Body & Filters -->
+  <main class="section-padding" style="padding-top: 40px; background: var(--bg-pitch);">
+    <div class="container">
+
+      <!-- Filter Controls Bar -->
+      <div class="filter-bar-container">
+        <div class="filter-row-top">
+          <!-- Origin Switcher -->
+          <div class="origin-toggle-group">
+            <button class="origin-filter-btn active" data-origin="All">All Origins</button>
+            <button class="origin-filter-btn" data-origin="Pakistani">Pakistani / Local</button>
+            <button class="origin-filter-btn" data-origin="Japanese">Japanese / Imported</button>
+          </div>
+
+          <!-- Search Input -->
+          <div class="search-input-box">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" id="search-input" placeholder="Search by brand, model, or year (e.g. Corolla, Civic, Jaecoo, Prado)..." />
+          </div>
+
+          <!-- Live Counter -->
+          <div id="inventory-count" style="font-family: var(--font-subheading); font-weight: 600; font-size: 0.9rem; color: var(--brand-gold);">
+            Loading...
+          </div>
+        </div>
+
+        <div class="filter-row-bottom">
+          <!-- Transmission Filter -->
+          <select id="filter-transmission" class="filter-select">
+            <option value="All">All Transmissions</option>
+            <option value="Automatic">Automatic</option>
+            <option value="Manual">Manual</option>
+          </select>
+
+          <!-- Fuel Filter -->
+          <select id="filter-fuel" class="filter-select">
+            <option value="All">All Fuel Types</option>
+            <option value="Petrol">Petrol</option>
+            <option value="Hybrid">Hybrid</option>
+            <option value="Diesel">Diesel</option>
+            <option value="Electric">Electric</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Vehicle Grid -->
+      <div class="inventory-grid-wrapper" id="inventory-grid">
+        <!-- Rendered dynamically from Supabase via inventory.js -->
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom" style="border: none; padding-top: 0;">
+        <div>&copy; 2026 NaqeeB Motors. All Rights Reserved.</div>
+        <div>Street 1, Block C, Soan Gardens, Islamabad &bull; +92 340 9272005</div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="/js/supabase-client.js"></script>
+  <script src="/js/showcase.js"></script>
+  <script src="/js/inventory.js"></script>
+  <script src="/js/hero-animations.js"></script>
+</body>
+</html>
