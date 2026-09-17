@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vehicle Inventory Management | NaqeeB Motors Staff</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="/assets/images/logo.png" />
+
+  <!-- Google Fonts: Anton & Manrope -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="/css/staff.css" />
+
+  <!-- Supabase JS Client v2 (CDN) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body class="staff-body" data-staff-page="vehicles">
+
+  <!-- =========================================================================
+       STAFF APPLICATION
+       ========================================================================= -->
+  <div id="staff-app-section">
+    <!-- Top Navbar -->
+    <header class="staff-navbar">
+      <div class="staff-nav-container">
+        <div class="staff-brand">
+          <a href="/staff/index.html" style="display: flex; align-items: center; gap: 10px;">
+            <img src="/assets/images/logo.png" alt="NaqeeB Motors Emblem" />
+            <strong style="font-family: var(--font-heading); font-size: 1.1rem; letter-spacing: 0.05em;">NAQEEB MOTORS</strong>
+          </a>
+          <span class="staff-portal-badge">Staff Console</span>
+        </div>
+
+        <ul class="staff-nav-links">
+          <li><a href="/staff/index.html" class="staff-nav-btn">Dashboard</a></li>
+          <li><a href="/staff/vehicles.html" class="staff-nav-btn active">Vehicles</a></li>
+          <li><a href="/staff/customers.html" class="staff-nav-btn">Customers</a></li>
+          <li><a href="/staff/sales.html" class="staff-nav-btn">Sales Ledger</a></li>
+          <li><a href="/" target="_blank" class="staff-nav-btn" style="color: var(--brand-gold);">View Live Website ↗</a></li>
+        </ul>
+
+        <div class="staff-user-menu">
+          <div class="staff-user-info">
+            <span class="user-email" id="staff-user-email">staff@naqeebmotors.com</span>
+            <span style="font-size: 0.75rem; color: var(--brand-gold);">Active Session</span>
+          </div>
+          <button id="staff-logout-btn" class="btn-logout">Sign Out</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="staff-main-content">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 28px; flex-wrap: wrap; gap: 16px;">
+        <div>
+          <h1 style="font-size: 2rem; margin-bottom: 4px;">Vehicle Inventory</h1>
+          <p>Add, edit, upload photos, and update availability status for all showroom vehicles.</p>
+        </div>
+        <button id="open-add-vehicle-btn" class="btn btn-primary">
+          + Add New Vehicle
+        </button>
+      </div>
+
+      <!-- Vehicle Inventory Table Card -->
+      <div class="table-card">
+        <div class="table-header">
+          <div class="table-title">All Vehicles Ledger</div>
+        </div>
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Vehicle & Variant</th>
+                <th>Origin</th>
+                <th>Price (PKR)</th>
+                <th>Mileage</th>
+                <th>Status</th>
+                <th>Reg City</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="vehicles-mgmt-tbody">
+              <!-- Rendered dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- =========================================================================
+       ADD / EDIT VEHICLE MODAL
+       ========================================================================= -->
+  <div class="modal-overlay" id="vehicle-modal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 id="vehicle-modal-title">Add New Vehicle</h3>
+        <button class="modal-close-btn" id="close-vehicle-modal-btn">✕</button>
+      </div>
+      <div class="modal-body">
+        <form id="vehicle-form">
+          <input type="hidden" id="vehicle-id-input" />
+
+          <!-- Row 1: Brand & Model -->
+          <div class="modal-grid-2">
+            <div class="form-group">
+              <label class="form-label">Make / Brand *</label>
+              <input type="text" id="v-brand" class="form-input" required placeholder="e.g. Toyota, Honda, Jaecoo, Suzuki" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Model *</label>
+              <input type="text" id="v-model" class="form-input" required placeholder="e.g. Corolla, Civic, J7, Swift" />
+            </div>
+          </div>
+
+          <!-- Row 2: Variant & Year -->
+          <div class="modal-grid-2">
+            <div class="form-group">
+              <label class="form-label">Variant / Trim</label>
+              <input type="text" id="v-variant" class="form-input" placeholder="e.g. Grande, RS Turbo, AWD Premium" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Model Year *</label>
+              <input type="number" id="v-year" class="form-input" required placeholder="2024" min="1990" max="2027" />
+            </div>
+          </div>
+
+          <!-- Row 3: Price & Mileage -->
+          <div class="modal-grid-2">
+            <div class="form-group">
+              <label class="form-label">Price (PKR Total) *</label>
+              <input type="number" id="v-price" class="form-input" required placeholder="e.g. 7500000" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Mileage (km) *</label>
+              <input type="number" id="v-mileage" class="form-input" required placeholder="e.g. 18500" />
+            </div>
+          </div>
+
+          <!-- Row 4: Specs & Registration -->
+          <div class="modal-grid-2">
+            <div class="form-group">
+              <label class="form-label">Origin *</label>
+              <select id="v-origin" class="form-select">
+                <option value="Pakistani / Local">Pakistani / Local</option>
+                <option value="Japanese / Imported">Japanese / Imported</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Transmission *</label>
+              <select id="v-transmission" class="form-select">
+                <option value="Automatic">Automatic</option>
+                <option value="Manual">Manual</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="modal-grid-2">
+            <div class="form-group">
+              <label class="form-label">Fuel Type *</label>
+              <select id="v-fuel" class="form-select">
+                <option value="Petrol">Petrol</option>
+                <option value="Hybrid">Hybrid</option>
+                <option value="Diesel">Diesel</option>
+                <option value="Electric">Electric</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Engine Capacity *</label>
+              <input type="text" id="v-engine" class="form-input" required placeholder="e.g. 1500cc / 1.8L" />
+            </div>
+          </div>
+
+          <div class="modal-grid-2">
+            <div class="form-group">
+              <label class="form-label">Exterior Colour *</label>
+              <input type="text" id="v-colour" class="form-input" required placeholder="e.g. Pearl White, Emerald Green, Metallic Black" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Registration City</label>
+              <input type="text" id="v-reg-city" class="form-input" placeholder="e.g. Islamabad, Lahore, Unregistered" />
+            </div>
+          </div>
+
+          <!-- Status & Featured -->
+          <div class="modal-grid-2">
+            <div class="form-group">
+              <label class="form-label">Inventory Status *</label>
+              <select id="v-status" class="form-select">
+                <option value="Available">Available (Visible in Showroom)</option>
+                <option value="Sold">Sold (Archived to Sales)</option>
+                <option value="Archived">Archived</option>
+              </select>
+            </div>
+            <div class="form-group" style="display: flex; align-items: center; gap: 12px; margin-top: 30px;">
+              <input type="checkbox" id="v-featured" style="width: 20px; height: 20px; accent-color: var(--brand-red);" />
+              <label for="v-featured" style="font-weight: 600; cursor: pointer; color: #FFFFFF;">Mark as Featured on Homepage</label>
+            </div>
+          </div>
+
+          <!-- Images File Uploader -->
+          <div class="form-group">
+            <label class="form-label">Upload Vehicle Photos (Direct to Supabase Storage)</label>
+            <input type="file" id="v-images-input" multiple accept="image/*" class="form-input" style="padding: 8px;" />
+            <span style="font-size: 0.8rem; color: var(--text-muted); display: block; margin-top: 4px;">
+              Select multiple photos (Front, Rear, Side, Interior, Dashboard, Engine).
+            </span>
+          </div>
+
+          <!-- Condition Notes & Description -->
+          <div class="form-group">
+            <label class="form-label">Condition / Inspection Notes</label>
+            <textarea id="v-condition" class="form-textarea" rows="2" placeholder="e.g. Bumper to bumper genuine, 4.5 Grade Japanese auction sheet, fresh import..."></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Vehicle Description</label>
+            <textarea id="v-description" class="form-textarea" rows="3" placeholder="Detailed vehicle overview and package features..."></textarea>
+          </div>
+
+          <!-- Submit Button -->
+          <div style="display: flex; justify-content: flex-end; gap: 14px; margin-top: 24px;">
+            <button type="submit" class="btn btn-primary" style="padding: 12px 36px;">
+              Save Vehicle
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="/js/supabase-client.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/staff-dashboard.js"></script>
+</body>
+</html>
