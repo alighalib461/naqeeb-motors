@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sales & Transactions Ledger | NaqeeB Motors Staff</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="/assets/images/logo.png" />
+
+  <!-- Google Fonts: Anton & Manrope -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="/css/staff.css" />
+
+  <!-- Supabase JS Client v2 (CDN) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- html2pdf.js for Professional PDF Receipt Generation -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body class="staff-body" data-staff-page="sales">
+
+  <div id="staff-app-section">
+    <!-- Top Navbar -->
+    <header class="staff-navbar">
+      <div class="staff-nav-container">
+        <div class="staff-brand">
+          <a href="/staff/index.html" style="display: flex; align-items: center; gap: 10px;">
+            <img src="/assets/images/logo.png" alt="NaqeeB Motors Emblem" />
+            <strong style="font-family: var(--font-heading); font-size: 1.1rem; letter-spacing: 0.05em;">NAQEEB MOTORS</strong>
+          </a>
+          <span class="staff-portal-badge">Staff Console</span>
+        </div>
+
+        <ul class="staff-nav-links">
+          <li><a href="/staff/index.html" class="staff-nav-btn">Dashboard</a></li>
+          <li><a href="/staff/vehicles.html" class="staff-nav-btn">Vehicles</a></li>
+          <li><a href="/staff/customers.html" class="staff-nav-btn">Customers</a></li>
+          <li><a href="/staff/sales.html" class="staff-nav-btn active">Sales Ledger</a></li>
+          <li><a href="/" target="_blank" class="staff-nav-btn" style="color: var(--brand-gold);">View Live Website ↗</a></li>
+        </ul>
+
+        <div class="staff-user-menu">
+          <div class="staff-user-info">
+            <span class="user-email" id="staff-user-email">staff@naqeebmotors.com</span>
+            <span style="font-size: 0.75rem; color: var(--brand-gold);">Active Session</span>
+          </div>
+          <button id="staff-logout-btn" class="btn-logout">Sign Out</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="staff-main-content">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 28px; flex-wrap: wrap; gap: 16px;">
+        <div>
+          <h1 style="font-size: 2rem; margin-bottom: 4px;">Sales Transactions & Receipts</h1>
+          <p>Record vehicle handovers, track payment balances, auto-archive sold stock, and generate official customer receipts.</p>
+        </div>
+        <button id="open-record-sale-btn" class="btn btn-gold">
+          + Record New Sale
+        </button>
+      </div>
+
+      <!-- Sales Table Card -->
+      <div class="table-card">
+        <div class="table-header">
+          <div class="table-title">Complete Dealership Transaction History & Receipts</div>
+        </div>
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Sale Date</th>
+                <th>Receipt No</th>
+                <th>Vehicle Details</th>
+                <th>Customer Name</th>
+                <th>Agreed Price</th>
+                <th>Amount Received</th>
+                <th>Balance</th>
+                <th>Receipt / Actions</th>
+              </tr>
+            </thead>
+            <tbody id="sales-mgmt-tbody">
+              <!-- Rendered dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- =========================================================================
+       1. RECORD SALE MODAL (Keeps existing fields intact + optional walk-in details)
+       ========================================================================= -->
+  <div class="modal-overlay" id="sale-modal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>Record Vehicle Sale & Handover</h3>
+        <button class="modal-close-btn" id="close-sale-modal-btn">✕</button>
+      </div>
+      <div class="modal-body">
+        <form id="sale-form">
+          <!-- Select Vehicle -->
+          <div class="form-group">
+            <label class="form-label">Select Available Vehicle *</label>
+            <select id="s-vehicle-select" class="form-select" required>
+              <option value="">Loading available stock...</option>
+            </select>
+            <span style="font-size: 0.8rem; color: var(--brand-gold); display: block; margin-top: 4px;">
+              Recording a sale will automatically set this vehicle's status to <strong>SOLD</strong> and generate a permanent sales receipt.
+            </span>
+          </div>
+
+          <!-- Select Customer -->
+          <div class="form-group">
+            <label class="form-label">Select Registered Buyer / Customer *</label>
+            <select id="s-customer-select" class="form-select" required>
+              <option value="">Loading customer directory...</option>
+            </select>
+          </div>
+
+          <!-- Walk-in Customer Fields (Optional if not in CRM) -->
+          <div class="modal-grid-2">
+            <div class="form-group">
+              <label class="form-label">Client Name (if walk-in)</label>
+              <input type="text" id="s-custom-cust-name" class="form-input" placeholder="e.g. Tariq Mehmood" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Client Phone / Contact</label>
+              <input type="text" id="s-custom-cust-phone" class="form-input" placeholder="e.g. +92 300 1234567" />
+            </div>
+          </div>
+
+          <div class="modal-grid-2">
+            <div class="form-group">
+              <label class="form-label">Client CNIC / NIC</label>
+              <input type="text" id="s-custom-cust-cnic" class="form-input" placeholder="e.g. 37405-XXXXXXX-X" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Client Address</label>
+              <input type="text" id="s-custom-cust-address" class="form-input" placeholder="e.g. Sector F-10, Islamabad" />
+            </div>
+          </div>
+
+          <!-- Sale Date & Payment Method -->
+          <div class="modal-grid-2">
+            <div class="form-group">
+              <label class="form-label">Sale Date *</label>
+              <input type="date" id="s-sale-date" class="form-input" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Payment Method *</label>
+              <select id="s-payment-method" class="form-select">
+                <option value="Cash">Cash</option>
+                <option value="Bank Transfer">Bank Transfer (Online)</option>
+                <option value="Pay Order">Pay Order</option>
+                <option value="Cheque">Crossed Cheque</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Price & Received Amount -->
+          <div class="modal-grid-2">
+            <div class="form-group">
+              <label class="form-label">Final Agreed Sale Price (PKR) *</label>
+              <input type="number" id="s-sale-price" class="form-input" required placeholder="e.g. 7500000" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Amount Received / Advance (PKR) *</label>
+              <input type="number" id="s-received-amount" class="form-input" required placeholder="e.g. 5000000" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Remaining Balance (PKR Auto-calculated)</label>
+            <input type="number" id="s-remaining-amount" class="form-input" readonly style="background: #1e1e2c; color: var(--brand-gold); font-weight: 700;" placeholder="0" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Transaction Notes & Handover Terms</label>
+            <textarea id="s-notes" class="form-textarea" rows="2" placeholder="e.g. Token received, original documents handed over with transfer verification..."></textarea>
+          </div>
+
+          <div style="display: flex; justify-content: flex-end; gap: 14px; margin-top: 24px;">
+            <button type="submit" class="btn btn-gold" style="padding: 12px 36px;">
+              Confirm Sale & Generate Receipt
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       2. SALE RECORDED SUCCESSFULLY CONFIRMATION MODAL
+       ========================================================================= -->
+  <div class="modal-overlay" id="sale-success-modal">
+    <div class="modal-box success-modal-box">
+      <div class="success-icon-wrap">✓</div>
+      <h2 class="success-modal-title">Sale Recorded Successfully</h2>
+      <p style="color: var(--text-secondary); margin-bottom: 0;">The transaction has been saved and the official receipt is ready.</p>
+
+      <div class="success-meta-card">
+        <div class="success-meta-row">
+          <span class="success-meta-label">Receipt Number:</span>
+          <span class="success-meta-val" id="succ-receipt-num" style="color: var(--brand-gold); font-family: var(--font-heading); font-size: 1.05rem;">NM-RCP-000001</span>
+        </div>
+        <div class="success-meta-row">
+          <span class="success-meta-label">Vehicle:</span>
+          <span class="success-meta-val" id="succ-vehicle-name">-</span>
+        </div>
+        <div class="success-meta-row">
+          <span class="success-meta-label">Purchaser:</span>
+          <span class="success-meta-val" id="succ-customer-name">-</span>
+        </div>
+        <div class="success-meta-row">
+          <span class="success-meta-label">Total Price:</span>
+          <span class="success-meta-val" id="succ-price">-</span>
+        </div>
+        <div class="success-meta-row">
+          <span class="success-meta-label">Amount Received:</span>
+          <span class="success-meta-val" id="succ-received" style="color: #4ADE80;">-</span>
+        </div>
+        <div class="success-meta-row">
+          <span class="success-meta-label">Remaining Balance:</span>
+          <span class="success-meta-val" id="succ-remaining">-</span>
+        </div>
+      </div>
+
+      <div class="success-actions-grid">
+        <button id="succ-btn-view-receipt" class="btn btn-primary btn-sm" style="justify-content: center;">
+          📄 View Receipt
+        </button>
+        <button id="succ-btn-download-pdf" class="btn btn-gold btn-sm" style="justify-content: center;">
+          📥 Download PDF
+        </button>
+        <button id="succ-btn-print" class="btn btn-secondary btn-sm" style="justify-content: center;">
+          🖨️ Print Receipt
+        </button>
+      </div>
+
+      <button id="succ-btn-close" class="btn btn-secondary btn-sm" style="width: 100%; justify-content: center; margin-top: 8px;">
+        Done / Back to Sales Ledger
+      </button>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       3. DEDICATED OFFICIAL RECEIPT PREVIEW MODAL
+       ========================================================================= -->
+  <div class="modal-overlay" id="receipt-modal">
+    <div class="modal-box receipt-modal-box">
+      <!-- Toolbar Header -->
+      <div class="receipt-toolbar">
+        <div class="receipt-toolbar-left">
+          <button id="back-to-sales-btn" class="btn btn-secondary btn-sm">
+            ← Back to Sales
+          </button>
+          <span style="font-family: var(--font-subheading); font-weight: 700; font-size: 0.9rem; color: #FFFFFF;">
+            Receipt: <span id="receipt-modal-number-display" style="color: var(--brand-gold);">NM-RCP-000001</span>
+          </span>
+        </div>
+
+        <div class="receipt-toolbar-right">
+          <button id="download-receipt-pdf-btn" class="btn btn-gold btn-sm">
+            📥 Download PDF
+          </button>
+          <button id="print-receipt-btn" class="btn btn-primary btn-sm">
+            🖨️ Print Receipt
+          </button>
+          <button class="modal-close-btn" id="close-receipt-modal-btn" title="Close Preview">✕</button>
+        </div>
+      </div>
+
+      <!-- Printable Receipt Document Container -->
+      <div class="modal-body" style="background: #14161F; padding: 24px;">
+        <div id="receipt-modal-content-container">
+          <!-- Populated dynamically with buildReceiptDocumentHTML -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="/js/supabase-client.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/staff-dashboard.js"></script>
+</body>
+</html>
