@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vehicle Details | NaqeeB Motors Islamabad</title>
+  <meta name="description" content="View verified specifications, condition notes, and photo gallery for this vehicle at NaqeeB Motors, Soan Gardens, Islamabad." />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="/assets/images/logo.png" />
+
+  <!-- Google Fonts: Anton & Manrope -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="/css/animations.css" />
+  <link rel="stylesheet" href="/css/showroom.css" />
+
+  <!-- Supabase JS Client v2 (CDN) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body style="background: var(--bg-pitch);">
+
+  <!-- Scroll Progress -->
+  <div id="scroll-progress"></div>
+
+  <!-- Navbar -->
+  <nav class="navbar scrolled">
+    <div class="navbar-container">
+      <a href="/" class="brand-logo">
+        <img src="/assets/images/logo.png" alt="NaqeeB Motors Emblem" />
+        <div class="brand-name">
+          <span class="title">NAQEEB <span>MOTORS</span></span>
+          <span class="sub">Islamabad • Pakistan</span>
+        </div>
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="/" class="nav-link">Home</a></li>
+        <li><a href="/#about" class="nav-link">About</a></li>
+        <li><a href="/inventory.html" class="nav-link active">Cars</a></li>
+        <li><a href="/#why-naqeeb" class="nav-link">Why NaqeeB</a></li>
+        <li><a href="/#reviews" class="nav-link">Reviews</a></li>
+        <li><a href="/#contact" class="nav-link">Contact</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <a href="/staff/index.html" class="nav-staff-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <span>Staff Portal</span>
+        </a>
+        <button class="hamburger-btn" aria-label="Toggle Menu">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Mobile Drawer Menu -->
+  <div class="mobile-drawer-overlay"></div>
+  <aside class="mobile-nav-drawer">
+    <div class="mobile-drawer-header">
+      <div class="brand-logo">
+        <img src="/assets/images/logo.png" alt="NaqeeB Motors Emblem" style="height: 38px;" />
+        <span class="brand-name"><span class="title">NAQEEB <span>MOTORS</span></span></span>
+      </div>
+      <button class="mobile-drawer-close" aria-label="Close Menu">✕</button>
+    </div>
+    <ul class="mobile-nav-links">
+      <li><a href="/" class="mobile-nav-link">Home</a></li>
+      <li><a href="/#about" class="mobile-nav-link">About NaqeeB</a></li>
+      <li><a href="/inventory.html" class="mobile-nav-link">Available Cars</a></li>
+      <li><a href="/#why-naqeeb" class="mobile-nav-link">Why NaqeeB</a></li>
+      <li><a href="/#reviews" class="mobile-nav-link">Customer Reviews</a></li>
+      <li><a href="/#contact" class="mobile-nav-link">Contact Showroom</a></li>
+    </ul>
+    <div class="mobile-drawer-footer">
+      <a href="/staff/index.html" class="btn btn-primary btn-sm" style="width: 100%;">
+        Staff Portal Login
+      </a>
+    </div>
+  </aside>
+
+  <!-- Dynamic Vehicle Detail Container -->
+  <main id="vehicle-detail-content">
+    <!-- Populated by js/car-details.js -->
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom" style="border: none; padding-top: 0;">
+        <div>&copy; 2026 NaqeeB Motors. All Rights Reserved.</div>
+        <div>Street 1, Block C, Soan Gardens, Islamabad &bull; +92 340 9272005</div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="/js/supabase-client.js"></script>
+  <script src="/js/showcase.js"></script>
+  <script src="/js/car-details.js"></script>
+  <script src="/js/hero-animations.js"></script>
+</body>
+</html>
