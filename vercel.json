@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "routes": [
+    { "src": "^/staff/?$", "dest": "/staff/index.html" },
+    { "src": "^/inventory/?$", "dest": "/inventory.html" },
+    { "src": "^/car-details/?$", "dest": "/car-details.html" }
+  ]
+}

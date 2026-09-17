@@ -1,0 +1,20 @@
+{
+  "name": "naqeeb-motors",
+  "version": "1.0.0",
+  "description": "NaqeeB Motors - Premium Automotive Dealership Website & Staff Portal",
+  "main": "index.html",
+  "scripts": {
+    "dev": "npx -y serve . -l 3000",
+    "start": "npx -y serve ."
+  },
+  "keywords": [
+    "dealership",
+    "automotive",
+    "cars",
+    "pakistan",
+    "islamabad",
+    "supabase"
+  ],
+  "author": "NaqeeB Motors",
+  "license": "ISC"
+}
