@@ -1,0 +1,661 @@
+/* ==============================================================================
+   NAQEEB MOTORS — LUXURY AUTOMOTIVE DESIGN SYSTEM
+   Visual Refinement: Anton (Display) + Manrope (UI/Body) & Controlled Color Palette
+   ============================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Manrope:wght@400;500;600;700;800&display=swap');
+
+:root {
+  /* Brand Palette - Exact Specification */
+  --bg-pitch: #090A0F;
+  --bg-deep: #101218;
+  --bg-section: #101218;
+  --bg-card: #181A22;
+  --bg-card-hover: #20232D;
+  --bg-glass: rgba(24, 26, 34, 0.88);
+  --bg-glass-heavy: rgba(9, 10, 15, 0.96);
+
+  /* Brand Colors - Exact Match */
+  --brand-red: #E50914;
+  --brand-red-hover: #FF1E2A;
+  --brand-red-glow: rgba(229, 9, 20, 0.28);
+  --brand-red-subtle: rgba(229, 9, 20, 0.12);
+
+  --brand-gold: #F4C542;
+  --brand-gold-hover: #FFD566;
+  --brand-gold-glow: rgba(244, 197, 66, 0.25);
+  --brand-gold-subtle: rgba(244, 197, 66, 0.12);
+
+  /* Typography Colors */
+  --text-primary: #F5F5F5;
+  --text-secondary: #A9ADB8;
+  --text-muted: #6E7382;
+  --text-inverse: #090A0F;
+
+  /* Borders & Dividers */
+  --border-subtle: #2B2F3A;
+  --border-light: #3D4251;
+  --border-red: rgba(229, 9, 20, 0.4);
+  --border-gold: rgba(244, 197, 66, 0.4);
+
+  /* Typography Tokens */
+  --font-heading: 'Anton', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-subheading: 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-body: 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'Manrope', monospace;
+
+  /* Layout & Spacing */
+  --header-height: 84px;
+  --container-max: 1360px;
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 22px;
+  --radius-full: 9999px;
+
+  /* Transitions */
+  --transition-fast: 0.25s ease;
+  --transition-normal: 0.3s ease;
+  --transition-smooth: 0.5s ease;
+}
+
+/* Base Reset */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  background-color: var(--bg-pitch);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+  background-color: var(--bg-pitch);
+  font-family: var(--font-body);
+  font-weight: 400;
+  color: var(--text-secondary);
+}
+
+/* Scroll Progress Bar */
+#scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  width: 0%;
+  background: linear-gradient(90deg, var(--brand-red), var(--brand-gold));
+  z-index: 9999;
+  box-shadow: 0 0 10px var(--brand-red-glow);
+  transition: width 0.1s ease-out;
+}
+
+/* Typography Hierarchy */
+h1, h2 {
+  font-family: var(--font-heading);
+  color: var(--text-primary);
+  line-height: 1.08;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  font-weight: 400;
+}
+
+h1 { font-size: clamp(2.6rem, 6vw, 4.8rem); }
+h2 { font-size: clamp(2rem, 4.2vw, 3.4rem); letter-spacing: 0.03em; }
+
+h3 {
+  font-family: var(--font-subheading);
+  font-size: clamp(1.2rem, 1.8vw, 1.55rem);
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.3;
+}
+
+h4 {
+  font-family: var(--font-subheading);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.35;
+}
+
+h5, h6 {
+  font-family: var(--font-subheading);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+p {
+  color: var(--text-secondary);
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 1rem;
+  line-height: 1.65;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+img, video, canvas {
+  max-width: 100%;
+  display: block;
+}
+
+button, input, select, textarea {
+  font-family: var(--font-body);
+  font-size: inherit;
+}
+
+/* Containers */
+.container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.section-padding {
+  padding: 120px 0;
+}
+
+@media (max-width: 768px) {
+  .section-padding {
+    padding: 80px 0;
+  }
+}
+
+/* Section Header Shared */
+.section-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-subheading);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--brand-gold);
+  margin-bottom: 16px;
+  padding: 6px 14px;
+  background: var(--brand-gold-subtle);
+  border: 1px solid var(--border-gold);
+  border-radius: var(--radius-full);
+}
+
+.section-tag .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--brand-red);
+  box-shadow: 0 0 6px var(--brand-red);
+}
+
+.section-header {
+  margin-bottom: 60px;
+}
+
+.section-header.center {
+  text-align: center;
+}
+
+.section-header.center .section-tag {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.section-header h2 {
+  margin-bottom: 16px;
+}
+
+.section-header p {
+  max-width: 640px;
+  font-size: 1.05rem;
+  font-family: var(--font-body);
+  font-weight: 400;
+  color: var(--text-secondary);
+}
+
+.section-header.center p {
+  margin: 0 auto;
+}
+
+/* ==============================================================================
+   BUTTON SYSTEM (STRICTLY LOGO GOLD & BRAND RED)
+   ============================================================================== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px 30px;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-subheading);
+  font-weight: 700;
+  font-size: 0.92rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  border: none;
+  outline: none;
+  text-align: center;
+}
+
+/* 1. Brand Red Button */
+.btn-primary, .btn-red {
+  background: var(--brand-red);
+  color: #FFFFFF;
+  box-shadow: 0 4px 18px var(--brand-red-glow);
+}
+
+.btn-primary:hover, .btn-red:hover {
+  background: var(--brand-red-hover);
+  color: #FFFFFF;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px var(--brand-red-glow);
+}
+
+/* 2. Logo Gold Button */
+.btn-gold, .btn-secondary {
+  background: var(--brand-gold);
+  color: #090A0F;
+  font-weight: 700;
+  box-shadow: 0 4px 18px var(--brand-gold-glow);
+}
+
+.btn-gold:hover, .btn-secondary:hover {
+  background: var(--brand-gold-hover);
+  color: #090A0F;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px var(--brand-gold-glow);
+}
+
+.btn-sm {
+  padding: 10px 20px;
+  font-size: 0.84rem;
+}
+
+/* Outline / Subtle Variants using strictly Brand Colors */
+.btn-outline-red {
+  background: var(--brand-red-subtle);
+  color: #FF5A65;
+  border: 1px solid var(--border-red);
+}
+
+.btn-outline-red:hover {
+  background: var(--brand-red);
+  color: #FFFFFF;
+  box-shadow: 0 4px 18px var(--brand-red-glow);
+}
+
+.btn-outline-gold {
+  background: var(--brand-gold-subtle);
+  color: var(--brand-gold);
+  border: 1px solid var(--border-gold);
+}
+
+.btn-outline-gold:hover {
+  background: var(--brand-gold);
+  color: #090A0F;
+  box-shadow: 0 4px 18px var(--brand-gold-glow);
+}
+
+/* Navbar */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: var(--header-height);
+  z-index: 1000;
+  transition: all var(--transition-normal);
+  background: transparent;
+  display: flex;
+  align-items: center;
+}
+
+.navbar.scrolled {
+  height: 72px;
+  background: var(--bg-glass-heavy);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border-subtle);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+}
+
+.navbar-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.brand-logo {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.brand-logo img {
+  height: 46px;
+  width: auto;
+  object-fit: contain;
+  transition: transform var(--transition-fast);
+}
+
+.brand-logo:hover img {
+  transform: scale(1.04);
+}
+
+.brand-name {
+  display: flex;
+  flex-direction: column;
+}
+
+.brand-name .title {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  letter-spacing: 0.05em;
+  color: #F5F5F5;
+  line-height: 1;
+}
+
+.brand-name .title span {
+  color: var(--brand-red);
+}
+
+.brand-name .sub {
+  font-family: var(--font-subheading);
+  font-size: 0.68rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--brand-gold);
+  margin-top: 2px;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  list-style: none;
+}
+
+.nav-link {
+  font-family: var(--font-subheading);
+  font-size: 0.92rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  position: relative;
+  padding: 6px 0;
+  transition: color var(--transition-fast);
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0%;
+  height: 2px;
+  background: var(--brand-red);
+  transition: width var(--transition-fast);
+}
+
+.nav-link:hover, .nav-link.active {
+  color: #F5F5F5;
+}
+
+.nav-link:hover::after, .nav-link.active::after {
+  width: 100%;
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.nav-staff-btn {
+  background: var(--brand-red);
+  color: #FFFFFF;
+  padding: 9px 20px;
+  font-family: var(--font-subheading);
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 2px 14px var(--brand-red-glow);
+  transition: all var(--transition-fast);
+}
+
+.nav-staff-btn:hover {
+  background: var(--brand-red-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px var(--brand-red-glow);
+}
+
+.hamburger-btn {
+  display: none;
+  background: none;
+  border: none;
+  color: #F5F5F5;
+  cursor: pointer;
+  padding: 8px;
+  font-size: 1.5rem;
+}
+
+/* Mobile Nav Drawer */
+.mobile-nav-drawer {
+  position: fixed;
+  top: 0;
+  right: -100%;
+  width: 85%;
+  max-width: 380px;
+  height: 100vh;
+  background: var(--bg-deep);
+  z-index: 10000;
+  padding: 32px 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: -10px 0 40px rgba(0, 0, 0, 0.85);
+  border-left: 1px solid var(--border-subtle);
+  transition: right var(--transition-normal);
+}
+
+.mobile-nav-drawer.open {
+  right: 0;
+}
+
+.mobile-drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 36px;
+}
+
+.mobile-drawer-close {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.mobile-nav-links {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.mobile-nav-link {
+  font-family: var(--font-subheading);
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  display: block;
+  transition: color var(--transition-fast);
+}
+
+.mobile-nav-link:hover {
+  color: var(--brand-red);
+}
+
+.mobile-drawer-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(4px);
+  z-index: 9999;
+  opacity: 0;
+  visibility: hidden;
+  transition: all var(--transition-fast);
+}
+
+.mobile-drawer-overlay.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+@media (max-width: 992px) {
+  .nav-links {
+    display: none;
+  }
+  .hamburger-btn {
+    display: block;
+  }
+}
+
+/* Footer */
+.footer {
+  background: #06070B;
+  border-top: 1px solid var(--border-subtle);
+  padding: 80px 0 32px;
+  position: relative;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1.5fr;
+  gap: 48px;
+  margin-bottom: 60px;
+}
+
+.footer-brand p {
+  margin: 20px 0 24px;
+  max-width: 320px;
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+}
+
+.footer-hours-badge {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 4px;
+  background: var(--bg-card);
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-subtle);
+  font-size: 0.85rem;
+  font-family: var(--font-subheading);
+}
+
+.footer-hours-badge span:first-child {
+  color: var(--brand-gold);
+  font-weight: 600;
+}
+
+.footer-title {
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  letter-spacing: 0.04em;
+  margin-bottom: 20px;
+  color: #F5F5F5;
+  text-transform: uppercase;
+}
+
+.footer-links {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.footer-link {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  font-family: var(--font-subheading);
+  font-weight: 500;
+  transition: all var(--transition-fast);
+}
+
+.footer-link:hover {
+  color: var(--brand-red);
+  padding-left: 4px;
+}
+
+.footer-contact-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 16px;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  font-family: var(--font-body);
+}
+
+.footer-contact-item svg {
+  color: var(--brand-red);
+  flex-shrink: 0;
+  margin-top: 4px;
+}
+
+.footer-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 32px;
+  border-top: 1px solid var(--border-subtle);
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  font-family: var(--font-subheading);
+}
+
+@media (max-width: 992px) {
+  .footer-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: 36px;
+  }
+  .footer-bottom {
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
+  }
+}
