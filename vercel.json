@@ -2,9 +2,21 @@
   "version": 2,
   "cleanUrls": true,
   "trailingSlash": false,
-  "routes": [
-    { "src": "^/staff/?$", "dest": "/staff/index.html" },
-    { "src": "^/inventory/?$", "dest": "/inventory.html" },
-    { "src": "^/car-details/?$", "dest": "/car-details.html" }
+  "rewrites": [
+    { "source": "/cars", "destination": "/inventory.html" },
+    { "source": "/cars/:id", "destination": "/car-details.html?id=:id" },
+    { "source": "/staff", "destination": "/staff/index.html" }
+  ],
+  "headers": [
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    }
   ]
 }
+

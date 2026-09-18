@@ -22,24 +22,22 @@ async function loadShowcaseVehicles() {
     }
 
     container.innerHTML = vehicles.map((car, index) => {
-      let primaryImg = '/assets/images/showroom.jpg';
-      if (car.vehicle_images && car.vehicle_images.length > 0) {
-        const p = car.vehicle_images.find(img => img.is_primary);
-        primaryImg = (p && p.image_url) ? p.image_url : (car.vehicle_images[0].image_url || primaryImg);
-      }
+      const primaryImg = (window.NaqeebDB && window.NaqeebDB.getVehiclePrimaryImage)
+        ? window.NaqeebDB.getVehiclePrimaryImage(car)
+        : (car.image_url || '/assets/images/showroom.jpg');
 
       const originStr = String(car.vehicle_origin || 'Pakistani / Local');
       const isJapanese = originStr.toLowerCase().includes('japan');
       const originClass = isJapanese ? 'japanese' : 'pakistani';
       const originLabel = isJapanese ? 'Japanese Import' : 'Local / PK';
 
-      const priceFormatted = window.formatPKR(car.price);
+      const priceFormatted = window.formatPKR ? window.formatPKR(car.price) : `PKR ${car.price}`;
       const brandModel = `${car.model_year || ''} ${car.brand || ''} ${car.model || ''}`.trim();
 
       return `
         <div class="vehicle-card" data-index="${index}">
           <div class="vehicle-card-image-wrap">
-            <img src="${primaryImg}" alt="${brandModel}" loading="lazy" onerror="this.src='/assets/images/showroom.jpg'" />
+            <img src="${primaryImg}" alt="${brandModel}" loading="lazy" onerror="this.onerror=null; this.src='/assets/images/showroom.jpg';" />
             <span class="origin-badge ${originClass}">${originLabel}</span>
             ${car.is_featured ? '<span class="featured-pill">Featured</span>' : ''}
           </div>

@@ -24,6 +24,53 @@ function formatPKR(amount) {
 }
 window.formatPKR = formatPKR;
 
+// Universal Vehicle Image Resolvers
+function getVehiclePrimaryImage(car) {
+  if (!car) return '/assets/images/showroom.jpg';
+
+  // 1. Array of images in vehicle_images
+  if (Array.isArray(car.vehicle_images) && car.vehicle_images.length > 0) {
+    const primary = car.vehicle_images.find(img => img && (img.is_primary || img.primary));
+    if (primary && (primary.image_url || primary.url)) return primary.image_url || primary.url;
+    const first = car.vehicle_images[0];
+    if (typeof first === 'string') return first;
+    if (first && (first.image_url || first.url)) return first.image_url || first.url;
+  }
+
+  // 2. Direct property fallbacks
+  if (car.image_url) return car.image_url;
+  if (car.primary_image) return car.primary_image;
+  if (car.image) return car.image;
+  if (Array.isArray(car.images) && car.images.length > 0) {
+    return typeof car.images[0] === 'string' ? car.images[0] : (car.images[0].image_url || car.images[0].url || '/assets/images/showroom.jpg');
+  }
+
+  return '/assets/images/showroom.jpg';
+}
+window.getVehiclePrimaryImage = getVehiclePrimaryImage;
+
+function getVehicleGalleryImages(car) {
+  if (!car) return ['/assets/images/showroom.jpg'];
+  const list = [];
+
+  if (Array.isArray(car.vehicle_images) && car.vehicle_images.length > 0) {
+    car.vehicle_images.forEach(img => {
+      if (typeof img === 'string') list.push(img);
+      else if (img && (img.image_url || img.url)) list.push(img.image_url || img.url);
+    });
+  } else if (Array.isArray(car.images) && car.images.length > 0) {
+    car.images.forEach(img => {
+      if (typeof img === 'string') list.push(img);
+      else if (img && (img.image_url || img.url)) list.push(img.image_url || img.url);
+    });
+  }
+
+  if (car.image_url && !list.includes(car.image_url)) list.unshift(car.image_url);
+
+  return list.length > 0 ? list : ['/assets/images/showroom.jpg'];
+}
+window.getVehicleGalleryImages = getVehicleGalleryImages;
+
 // Seed data used as reliable showroom fallback and initial offline storage
 const SEED_VEHICLES = [
   {
@@ -44,7 +91,11 @@ const SEED_VEHICLES = [
     description: 'The flagship Jaecoo J7 combines rugged capability with executive comfort. Features 360-degree cameras, HUD, ADAS Level 2 safety suite, and premium ventilated seats.',
     status: 'Available',
     is_featured: true,
-    vehicle_images: [{ id: 'img-1', image_url: '/assets/images/showroom.jpg', is_primary: true, display_order: 0 }]
+    vehicle_images: [
+      { id: 'img-1a', image_url: 'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=1200&auto=format&fit=crop&q=80', is_primary: true, display_order: 0 },
+      { id: 'img-1b', image_url: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=1200&auto=format&fit=crop&q=80', is_primary: false, display_order: 1 },
+      { id: 'img-1c', image_url: '/assets/images/showroom.jpg', is_primary: false, display_order: 2 }
+    ]
   },
   {
     id: '85f452a8-939b-4414-8a8d-0d8c0406a30d',
@@ -64,7 +115,11 @@ const SEED_VEHICLES = [
     description: 'Pakistan’s favorite executive sedan. Equipped with sunroof, beige leather interior, cruise control, paddle shifters, and push-start engine.',
     status: 'Available',
     is_featured: true,
-    vehicle_images: [{ id: 'img-2', image_url: 'https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?w=1200&auto=format&fit=crop&q=80', is_primary: true, display_order: 0 }]
+    vehicle_images: [
+      { id: 'img-2a', image_url: 'https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?w=1200&auto=format&fit=crop&q=80', is_primary: true, display_order: 0 },
+      { id: 'img-2b', image_url: 'https://images.unsplash.com/photo-1590362891991-f776e747a588?w=1200&auto=format&fit=crop&q=80', is_primary: false, display_order: 1 },
+      { id: 'img-2c', image_url: '/assets/images/showroom.jpg', is_primary: false, display_order: 2 }
+    ]
   },
   {
     id: '2e8cc61e-22e1-40c5-a9ad-111dc77b9aa0',
@@ -84,7 +139,10 @@ const SEED_VEHICLES = [
     description: 'High performance sports sedan featuring Honda SENSING suite, dual exhaust, black sporty alloy rims, ambient lighting, and electronic parking brake.',
     status: 'Available',
     is_featured: true,
-    vehicle_images: [{ id: 'img-3', image_url: 'https://images.unsplash.com/photo-1606016159991-dfe4f2746ad5?w=1200&auto=format&fit=crop&q=80', is_primary: true, display_order: 0 }]
+    vehicle_images: [
+      { id: 'img-3a', image_url: 'https://images.unsplash.com/photo-1606016159991-dfe4f2746ad5?w=1200&auto=format&fit=crop&q=80', is_primary: true, display_order: 0 },
+      { id: 'img-3b', image_url: 'https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?w=1200&auto=format&fit=crop&q=80', is_primary: false, display_order: 1 }
+    ]
   },
   {
     id: 'f62955b0-6909-44b7-8992-6803f2ed5728',
@@ -104,7 +162,10 @@ const SEED_VEHICLES = [
     description: 'Iconic luxury 4x4 SUV. Features full 7-seater leather interior, crawl control, KDSS suspension, heated/cooled seats, and premium surround sound system.',
     status: 'Available',
     is_featured: true,
-    vehicle_images: [{ id: 'img-4', image_url: 'https://images.unsplash.com/photo-1594502184342-2e12f877aa73?w=1200&auto=format&fit=crop&q=80', is_primary: true, display_order: 0 }]
+    vehicle_images: [
+      { id: 'img-4a', image_url: 'https://images.unsplash.com/photo-1594502184342-2e12f877aa73?w=1200&auto=format&fit=crop&q=80', is_primary: true, display_order: 0 },
+      { id: 'img-4b', image_url: 'https://images.unsplash.com/photo-1563720223185-11003d516935?w=1200&auto=format&fit=crop&q=80', is_primary: false, display_order: 1 }
+    ]
   },
   {
     id: '384508ed-29c7-4cfa-a76f-ee01760645bd',
@@ -124,7 +185,10 @@ const SEED_VEHICLES = [
     description: 'Modern, fuel-efficient hatchback with 6 airbags, LED projector headlights, cruise control, 9-inch infotainment screen, and reverse camera.',
     status: 'Available',
     is_featured: false,
-    vehicle_images: [{ id: 'img-5', image_url: 'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=1200&auto=format&fit=crop&q=80', is_primary: true, display_order: 0 }]
+    vehicle_images: [
+      { id: 'img-5a', image_url: 'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=1200&auto=format&fit=crop&q=80', is_primary: true, display_order: 0 },
+      { id: 'img-5b', image_url: 'https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?w=1200&auto=format&fit=crop&q=80', is_primary: false, display_order: 1 }
+    ]
   },
   {
     id: '0d8c2c6b-a0db-4c8d-b319-aaafd4035407',
@@ -144,7 +208,10 @@ const SEED_VEHICLES = [
     description: 'Spacious Japanese kei car with outstanding fuel economy (22+ km/L), pillarless sliding doors, auto-folding mirrors, and multi-angle parking assist.',
     status: 'Available',
     is_featured: false,
-    vehicle_images: [{ id: 'img-6', image_url: 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=1200&auto=format&fit=crop&q=80', is_primary: true, display_order: 0 }]
+    vehicle_images: [
+      { id: 'img-6a', image_url: 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=1200&auto=format&fit=crop&q=80', is_primary: true, display_order: 0 },
+      { id: 'img-6b', image_url: 'https://images.unsplash.com/photo-1508974239320-0a029497e820?w=1200&auto=format&fit=crop&q=80', is_primary: false, display_order: 1 }
+    ]
   }
 ];
 
@@ -722,6 +789,8 @@ async function recordSaleRecord(saleData) {
 window.NaqeebDB = {
   getSupabase,
   formatPKR,
+  getVehiclePrimaryImage,
+  getVehicleGalleryImages,
   fetchAvailableVehicles,
   fetchVehicleById,
   fetchDashboardStats,

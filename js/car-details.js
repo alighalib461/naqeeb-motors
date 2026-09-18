@@ -8,7 +8,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
 async function loadVehicleDetails() {
   const urlParams = new URLSearchParams(window.location.search);
-  const vehicleId = urlParams.get('id');
+  let vehicleId = urlParams.get('id');
+
+  // Fallback to path /cars/:id if cleanUrls rewrite is active
+  if (!vehicleId) {
+    const pathParts = window.location.pathname.split('/').filter(Boolean);
+    const carsIdx = pathParts.indexOf('cars');
+    if (carsIdx >= 0 && pathParts[carsIdx + 1]) {
+      vehicleId = pathParts[carsIdx + 1];
+    }
+  }
 
   const container = document.getElementById('vehicle-detail-content');
   if (!container) return;
@@ -52,8 +61,8 @@ async function loadVehicleDetails() {
   const brandModel = `${car.model_year || ''} ${car.brand || ''} ${car.model || ''}`.trim();
   document.title = `${brandModel} | NaqeeB Motors Islamabad`;
 
-  const images = (car.vehicle_images && car.vehicle_images.length > 0)
-    ? car.vehicle_images.map(img => img.image_url)
+  const images = (window.NaqeebDB && window.NaqeebDB.getVehicleGalleryImages)
+    ? window.NaqeebDB.getVehicleGalleryImages(car)
     : ['/assets/images/showroom.jpg'];
 
   const originStr = String(car.vehicle_origin || 'Pakistani / Local');
@@ -61,7 +70,7 @@ async function loadVehicleDetails() {
   const originClass = isJapanese ? 'japanese' : 'pakistani';
   const originLabel = isJapanese ? 'Japanese Imported' : 'Pakistani / Local';
 
-  const formattedPrice = window.formatPKR(car.price);
+  const formattedPrice = window.formatPKR ? window.formatPKR(car.price) : `PKR ${car.price}`;
   const whatsappMessage = encodeURIComponent(
     `Hello NaqeeB Motors! I am interested in the ${brandModel} (${car.variant || 'Standard'}) listed for ${formattedPrice}. Is it currently available at your Soan Gardens showroom?`
   );
@@ -80,12 +89,12 @@ async function loadVehicleDetails() {
         <!-- Left: Image Gallery -->
         <div class="gallery-column">
           <div class="gallery-main" style="position: relative; border-radius: var(--radius-md); overflow: hidden; border: 1px solid var(--border-subtle); background: #000; min-height: 380px;">
-            <img id="active-gallery-image" src="${images[0]}" alt="${brandModel}" style="width: 100%; height: 100%; object-fit: cover; display: block;" onerror="this.src='/assets/images/showroom.jpg'" />
+            <img id="active-gallery-image" src="${images[0]}" alt="${brandModel}" style="width: 100%; height: 100%; object-fit: cover; display: block;" onerror="this.onerror=null; this.src='/assets/images/showroom.jpg';" />
           </div>
           <div class="gallery-thumbs" style="display: flex; gap: 12px; margin-top: 14px; overflow-x: auto; padding-bottom: 6px;">
             ${images.map((url, idx) => `
               <div class="gallery-thumb ${idx === 0 ? 'active' : ''}" onclick="window.switchGalleryImage('${url}', this)" style="width: 84px; height: 60px; flex-shrink: 0; border-radius: var(--radius-sm); overflow: hidden; border: 2px solid ${idx === 0 ? 'var(--brand-red)' : 'var(--border-subtle)'}; cursor: pointer;">
-                <img src="${url}" alt="Thumbnail ${idx + 1}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='/assets/images/showroom.jpg'" />
+                <img src="${url}" alt="Thumbnail ${idx + 1}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.onerror=null; this.src='/assets/images/showroom.jpg';" />
               </div>
             `).join('')}
           </div>

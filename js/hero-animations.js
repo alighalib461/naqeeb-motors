@@ -133,20 +133,24 @@ function initHeroScrollCanvas() {
   firstImg.src = getFrameSrc(0);
   frameImages[0] = firstImg;
 
-  firstImg.onload = () => {
+  let pipelineStarted = false;
+  function onFirstImageReady() {
+    if (pipelineStarted) return;
+    pipelineStarted = true;
     frameLoaded[0] = true;
     resizeCanvas();
     drawImageCover(firstImg);
     isFirstFrameDrawn = true;
     startPreloadPipeline();
+  }
+
+  firstImg.onload = onFirstImageReady;
+  firstImg.onerror = () => {
+    console.warn('Hero frame 1 failed to load from:', firstImg.src);
   };
 
-  if (firstImg.complete) {
-    frameLoaded[0] = true;
-    resizeCanvas();
-    drawImageCover(firstImg);
-    isFirstFrameDrawn = true;
-    startPreloadPipeline();
+  if (firstImg.complete && firstImg.naturalWidth > 0) {
+    onFirstImageReady();
   }
 
   // 2. Efficient tiered preloading pipeline
@@ -419,3 +423,4 @@ function initMobileMenu() {
   overlay.addEventListener('click', closeDrawer);
   navLinks.forEach(link => link.addEventListener('click', closeDrawer));
 }
+

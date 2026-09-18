@@ -757,7 +757,7 @@ function buildReceiptDocumentHTML(sale) {
       <!-- 1. Header: Dealership Branding & Address -->
       <div class="receipt-header-row">
         <div class="receipt-brand-block">
-          <img src="/assets/images/logo.png" alt="NaqeeB Motors Emblem" class="receipt-brand-logo" onerror="this.src='/assets/images/showroom.jpg'" />
+          <img src="/assets/images/logo.png" alt="NaqeeB Motors Emblem" class="receipt-brand-logo" onerror="this.onerror=null; this.src='/assets/images/showroom.jpg';" />
           <div>
             <h1 class="receipt-brand-title">NAQEEB <span>MOTORS</span></h1>
             <div class="receipt-brand-tagline">The Drive Starts Here &bull; Islamabad</div>

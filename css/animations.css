@@ -24,6 +24,7 @@
   align-items: center;
   justify-content: center;
   z-index: 10;
+  background: var(--bg-pitch) url('/assets/hero-frames/frame_0001.webp') center/cover no-repeat;
 }
 
 /* High-Performance Canvas for 151 WebP Frames */
@@ -213,7 +214,7 @@
   align-items: center;
   gap: 10px;
   padding: 6px 18px;
-  background: rgba(244, 26, 34, 0.85);
+  background: rgba(24, 26, 34, 0.85);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: var(--radius-full);
@@ -451,3 +452,4 @@
     scroll-behavior: auto !important;
   }
 }
+
